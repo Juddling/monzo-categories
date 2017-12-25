@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet, Text, View, FlatList } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View, FlatList, Modal, Button } from 'react-native';
 import { MONZO_ACCESS_TOKEN, MONZO_ACCOUNT_ID } from 'react-native-dotenv';
 import { List, ListItem } from "react-native-elements";
 
@@ -9,7 +9,8 @@ export default class App extends React.Component {
 
       this.state = {
         isLoading: true,
-        transactions: []
+        transactions: [],
+        visibleTransaction: null
       }
   }
 
@@ -42,6 +43,10 @@ export default class App extends React.Component {
       });
   }
 
+  transactionPressed = (item) => {
+    this.setState({ visibleTransaction: item })
+  }
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -52,6 +57,24 @@ export default class App extends React.Component {
     }
 
     return (
+      <View style={{ flex: 1, flexDirection: 'column' }}>
+        <Modal
+          visible={ this.state.visibleTransaction !== null }
+          onRequestClose={() => { console.log("Modal has been closed") }}
+          animationType='slide'>
+          <View style={{ flex: 1, padding: 20 }}>
+            <Text style={{ fontSize:20 }}>
+              <Text>{ this.state.visibleTransaction ? this.state.visibleTransaction.description : '' }</Text>
+              <Text>{ this.state.visibleTransaction ? this.state.visibleTransaction.local_amount : '' }</Text>
+              <Text>{ this.state.visibleTransaction ? this.state.visibleTransaction.local_currency : '' }</Text>
+            </Text>
+            <Button
+              onPress={() => this.setState({ visibleTransaction: null })}
+              title="Close Modal"
+            />
+          </View>
+        </Modal>
+
       <List>
         <FlatList
           data={this.state.transactions}
@@ -60,10 +83,12 @@ export default class App extends React.Component {
             <ListItem
               title={`${item.description}`}
               subtitle={item.metadata ? item.metadata.notes : ''}
+                onPress={() => this.transactionPressed(item)}
             />
           )}
         />
       </List>
+      </View>
     );
   }
 }
