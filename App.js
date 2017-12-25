@@ -1,6 +1,7 @@
 import React from 'react';
-import { ActivityIndicator, ListView, StyleSheet, Text, View } from 'react-native';
-import { MONZO_ACCOUNT_ID, MONZO_ACCESS_TOKEN } from 'react-native-dotenv';
+import { ActivityIndicator, StyleSheet, Text, View, FlatList } from 'react-native';
+import { MONZO_ACCESS_TOKEN, MONZO_ACCOUNT_ID } from 'react-native-dotenv';
+import { List, ListItem } from "react-native-elements";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -8,6 +9,7 @@ export default class App extends React.Component {
 
       this.state = {
         isLoading: true,
+        transactions: []
       }
   }
 
@@ -23,7 +25,6 @@ export default class App extends React.Component {
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         if (responseJson.error) {
           console.error(responseJson.message)
           return;
@@ -31,7 +32,7 @@ export default class App extends React.Component {
 
         this.setState({
           isLoading: false,
-          dataSource: ds.cloneWithRows(responseJson.transactions),
+          transactions: responseJson.transactions
         }, function() {
           // do something with new state
         });
@@ -51,12 +52,18 @@ export default class App extends React.Component {
     }
 
     return (
-      <View style={{flex: 1, paddingTop: 20}}>
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={(rowData) => <Text>{rowData.merchant ? rowData.merchant.emoji : ''}, {rowData.description}, {rowData.amount}, {rowData.metadata ? rowData.metadata.notes : ''}</Text>}
+      <List>
+        <FlatList
+          data={this.state.transactions}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <ListItem
+              title={`${item.description}`}
+              subtitle={item.metadata ? item.metadata.notes : ''}
+            />
+          )}
         />
-      </View>
+      </List>
     );
   }
 }
