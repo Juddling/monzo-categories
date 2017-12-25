@@ -24,6 +24,11 @@ export default class App extends React.Component {
       .then((response) => response.json())
       .then((responseJson) => {
         let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        if (responseJson.error) {
+          console.error(responseJson.message)
+          return;
+        }
+
         this.setState({
           isLoading: false,
           dataSource: ds.cloneWithRows(responseJson.transactions),
