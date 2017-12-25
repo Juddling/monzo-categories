@@ -49,7 +49,7 @@ export default class App extends React.Component {
       <View style={{flex: 1, paddingTop: 20}}>
         <ListView
           dataSource={this.state.dataSource}
-          renderRow={(rowData) => <Text>{rowData.merchant ? rowData.merchant.emoji : ''}, {rowData.description}, {rowData.amount}</Text>}
+          renderRow={(rowData) => <Text>{rowData.merchant ? rowData.merchant.emoji : ''}, {rowData.description}, {rowData.amount}, {rowData.metadata ? rowData.metadata.notes : ''}</Text>}
         />
       </View>
     );
