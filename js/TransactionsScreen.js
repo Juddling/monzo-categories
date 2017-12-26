@@ -31,6 +31,8 @@ export default class TransactionsScreen extends React.Component {
           return;
         }
 
+        responseJson.transactions.reverse();
+
         this.setState({
           isLoading: false,
           transactions: responseJson.transactions
