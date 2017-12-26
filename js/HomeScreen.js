@@ -1,25 +1,35 @@
 import React from 'react';
-import { Button, StyleSheet, Text, TextInput } from 'react-native';
+import { StyleSheet, TextInput } from 'react-native';
+import { Button, CheckBox } from 'react-native-elements';
 import { SafeAreaView } from 'react-navigation';
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { limit: '20' };
+    this.state = {
+      limit: true,
+      limitValue: '20'
+    };
   }
 
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <Text>Get first:</Text>
+        <CheckBox
+          title='Limit number of transactions'
+          checked={this.state.limit}
+          onPress={() => this.setState({ limit: !this.state.limit })}
+        />
         <TextInput
-          style={{width: 200, height: 40, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={(limit) => this.setState({limit})}
-          value={this.state.limit}
+          style={styles.input}
+          onChangeText={(limitValue) => this.setState({limitValue})}
+          value={this.state.limitValue}
         />
         <Button
-          onPress={() => this.props.navigation.navigate('Transactions', { limit: this.state.limit })}
+          style={styles.btn}
+          backgroundColor='#2196F3'
+          onPress={() => this.props.navigation.navigate('Transactions', { limit: this.state.limit, limitValue: this.state.limitValue })}
           title="GET TRANSACTIONS"
         />
       </SafeAreaView>
@@ -31,6 +41,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'stretch'
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    margin: 10
+  },
+  btn: {
+    marginTop: 20
   }
 });
