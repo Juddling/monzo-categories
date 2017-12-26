@@ -16,7 +16,8 @@ export default class TransactionsScreen extends React.Component {
 
   componentDidMount() {
     let baseUrl = 'https://api.monzo.com'
-    let transactions = `${baseUrl}/transactions?expand[]=merchant&account_id=${MONZO_ACCOUNT_ID}&limit=20`
+    let limit = this.props.navigation.state.params.limit;
+    let transactions = `${baseUrl}/transactions?expand[]=merchant&account_id=${MONZO_ACCOUNT_ID}&limit=${limit}`
     let whoami = `${baseUrl}/ping/whoami`
 
     return fetch(transactions, {
