@@ -23,6 +23,7 @@ export default class HomeScreen extends React.Component {
         />
         <TextInput
           style={styles.input}
+          keyboardType='numeric'
           onChangeText={(limitValue) => this.setState({limitValue})}
           value={this.state.limitValue}
         />
