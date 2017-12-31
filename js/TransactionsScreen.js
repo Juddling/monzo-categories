@@ -20,6 +20,12 @@ export default class TransactionsScreen extends React.Component {
     let transactions = `${baseUrl}/transactions?expand[]=merchant&account_id=${MONZO_ACCOUNT_ID}`
     let whoami = `${baseUrl}/ping/whoami`
 
+    if(navState.betweenDates == true) {
+      const fromDate = new Date(navState.fromDate).toISOString();
+      const toDate = new Date(navState.toDate).toISOString();
+      transactions += `&since=${fromDate}&before=${toDate}`
+    }
+
     if(navState.limit == true) {
       transactions += `&limit=${navState.limitValue}`
     }
